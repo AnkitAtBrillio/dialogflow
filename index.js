@@ -27,6 +27,13 @@ app.post('/getDealers', function(req,res){
       });
 
   }
+  if(location) {
+    getDealersOnLocation(location, function(error, response){
+        console.log('This is the location response ' + response);
+        res.setHeader("Content-type","application/json");
+        res.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
+    });
+  }
 });
 const port = process.env.PORT || 3001;
 app.listen(port);
@@ -73,6 +80,19 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
       console.log("finalResponse => " + finalResponse);
       cb(null, finalResponse)
     });
+}
+
+function getDealersOnLocation(location, calback){
+  let dealersLocationPath = dealersPath + "&location=" + location;
+  let locationPromiseResponse = getPromiseResponse(dealersHost, dealersLocationPath);
+  locationPromiseResponse.then((output) => {
+    if(output){
+            output = JSON.parse(output);
+            let totalResults =   output['totalResults'];
+            finalResponse = "You have a total of " + totalResults + " dealers in " + location;
+            calback(null,finalResponse);
+    }
+  });
 }
 
 function getPromiseResponse(host, path) {
