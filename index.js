@@ -12,10 +12,11 @@ app.use(bodyParser.json());
 
 app.post('/getDealers', function(req,res){
   console.log("POST request accepted from dialogflow");
-  let city = req.body.result.parameters['geo-city'];
-  let location = req.body.result.parameters['Location'];
-  let locality = req.body.result.parameters['Locality'];
+  const city = req.body.result.parameters['geo-city'];
+  const location = req.body.result.parameters['Location'];
+  const locality = req.body.result.parameters['Locality'];
   console.log("locality => " + locality);
+  console.log("city =>" + city);
 
   if(locality){
       getDealersOnBasisOfLocality(locality, function(error, finalResponse){
@@ -27,9 +28,9 @@ app.post('/getDealers', function(req,res){
       });
 
   }
-  if(location) {
-    getDealersOnLocation(location, function(error, response){
-        console.log('This is the location response ' + response);
+  if(city) {
+    getDealersOnCity(city, function(error, response){
+        console.log('This is the city response ' + response);
         res.setHeader("Content-type","application/json");
         res.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
     });
@@ -82,14 +83,16 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
     });
 }
 
-function getDealersOnLocation(location, calback){
-  let dealersLocationPath = dealersPath + "&location=" + location;
+function getDealersOnCity(city, calback){
+  let dealersLocationPath = dealersPath + "&location=" + city;
+  console.log("Dealres city search path " + dealersLocationPath);
   let locationPromiseResponse = getPromiseResponse(dealersHost, dealersLocationPath);
   locationPromiseResponse.then((output) => {
     if(output){
+                  console.log("This is city search response " + output);
             output = JSON.parse(output);
             let totalResults =   output['totalResults'];
-            finalResponse = "You have a total of " + totalResults + " dealers in " + location;
+            finalResponse = "You have a total of " + totalResults + " dealers in " + city;
             calback(null,finalResponse);
     }
   });
