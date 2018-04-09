@@ -41,11 +41,14 @@ app.listen(port);
 console.log(`Listening on port ${port}`);
 
 
+
+//Method to get dealers on basis of locality provided
 function getDealersOnBasisOfLocality(locality, cb) {
   return getCoordinates(locality, cb);
   }
 
 
+//Method to get corrdinates of given loclality before aking dealers call
 function getCoordinates(locality, cb){
 
   let path="";
@@ -67,6 +70,8 @@ function getCoordinates(locality, cb){
 });
 }
 
+
+//Method to get dealers for coordinates of given location
 function getDealersNearCoordindates(latitude, longitude, cb) {
 
     var requestURL = dealersPath + "&lat=" +  latitude + "&long=" + longitude;
@@ -83,6 +88,8 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
     });
 }
 
+
+//Function to get dealers on basis of city
 function getDealersOnCity(city, calback){
   let dealersLocationPath = dealersPath + "&location=" + city;
   console.log("Dealres city search path " + dealersLocationPath);
@@ -92,12 +99,14 @@ function getDealersOnCity(city, calback){
                   console.log("This is city search response " + output);
             output = JSON.parse(output);
             let totalResults =   output['totalResults'];
-            finalResponse = "You have a total of " + totalResults + " dealers in " + city;
+            finalResponse = "You have a total of " + totalResults + " dealers in " + city + ". Would you like to locate nearest dealer or in a particular area?";
             calback(null,finalResponse);
     }
   });
 }
 
+
+//Generic function to handle http request and response
 function getPromiseResponse(host, path) {
   return new Promise((resolve,reject) => {
       https.get({host : host, path : path}, (res) => {
