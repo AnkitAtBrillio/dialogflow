@@ -138,6 +138,7 @@ function getPermissionFromUser(request,response) {
   const dialogFlowApp = new DialogFlowApp({request,response});
 
   const askPermission = (dialogFlowApp) => {
+      console.log("Asking for permission");
       dialogFlowApp.askForPermission("To locate you", dialogFlowApp.SupportedPermissions.DEVICE_PRECISE_LOCATION);
   };
 
