@@ -1,11 +1,14 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
+const DialogFlowApp = require('actions-on-google').DialogflowApp;
 const geoCodeAPIURL = "maps.googleapis.com";
 const geoCodeAPIKey = "AIzaSyC5VSrxufQfaSaM6J-mfFQJgGfXpiAP-7w";
 const dealersHost = "ankitsrivastava-test.apigee.net";
 const dealersPath = "/stubdealersapi?size=5";
+
 var app = express();
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -34,6 +37,9 @@ app.post('/getDealers', function(req,res){
         res.setHeader("Content-type","application/json");
         res.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
     });
+  }
+  if(location){
+  getPermissionFromUser(req,res);
   }
 });
 const port = process.env.PORT || 3001;
@@ -121,4 +127,33 @@ function getPromiseResponse(host, path) {
         });
       });
   });
+}
+
+
+function getPermissionFromUser(request,response) {
+
+  console.log('Get permission from user');
+  const actions = new Map();
+  const dialogFlowApp = new DialogFlowApp({request,response});
+
+  const askPermission = (dialogFlowApp) => {
+      dialogFlowApp.askForPermission("To locate you", dialogFlowApp.SupportedPermissions.DEVICE_PRECISE_LOCATION);
+  };
+
+  const userInfo = (dialogFlowApp) => {
+    if(dialogFlowApp.isPermissionGranted()) {
+       const address = dialogFlowApp.getDeviceLocation().address;
+            if (address) {            
+                dialogFlowApp.tell(`You are at ${address}`);
+            }else{
+              dialogFlowApp.tell("Sorry, could not figure out your location");
+            }
+    }
+  }
+
+    actions.set('request_permission', askPermission);
+    actions.set('user_info', userInfo);
+    dialogFlowApp.handleRequest(actions);
+
+
 }
