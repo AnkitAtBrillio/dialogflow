@@ -18,6 +18,7 @@ app.post('/getDealers', function(req,res){
   const city = req.body.result.parameters['geo-city'];
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
+  const consent = req.body.result.parameters['Consent'];
   console.log("locality => " + locality);
   console.log("city =>" + city);
 
@@ -38,7 +39,7 @@ app.post('/getDealers', function(req,res){
         res.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
     });
   }
-  if(location){
+  if(consent){
   getPermissionFromUser(req,res);
   }
 });
