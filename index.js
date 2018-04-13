@@ -18,7 +18,7 @@ app.post('/getDealers', function(req,res){
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
   const consent = req.body.result.parameters['Consent'];
-  const actualAction = req.body.result.action;
+  const actualAction = request.body.result.action;
 
   if(locality){
       getDealersOnBasisOfLocality(locality, function(error, finalResponse){
@@ -38,7 +38,7 @@ app.post('/getDealers', function(req,res){
     });
   }
   if(consent || actualAction){
-  getPermissionFromUser(req,res);
+  getPermissionFromUser(req,res,actualAction);
   }
 });
 const port = process.env.PORT || 3001;
@@ -129,9 +129,10 @@ function getPromiseResponse(host, path) {
 }
 
 
-function getPermissionFromUser(request,response) {
+function getPermissionFromUser(request,response,actualAction) {
 
   console.log("Inside getPermissionFromUser");
+  console.log("Request body " + request.body);
   const permissionAction = "request_permission";
   const user_info_action = "user_info";
   const DialogflowApp = require("actions-on-google").DialogflowApp;
