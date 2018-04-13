@@ -18,6 +18,7 @@ app.post('/getDealers', function(req,res){
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
   const consent = req.body.result.parameters['Consent'];
+  console.log(req);
   console.log("locality => " + locality);
   console.log("city =>" + city);
 
