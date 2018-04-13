@@ -134,6 +134,7 @@ function getPermissionFromUser(request,response) {
 
   console.log("Inside getPermissionFromUser");
   const permissionAction = "request_permission";
+  const user_info_action = "user_info";
   const actualAction = request.body.result.action;
   const DialogflowApp = require("actions-on-google").DialogflowApp;
   const app = new DialogflowApp({request,response});
@@ -143,5 +144,17 @@ function getPermissionFromUser(request,response) {
   if(actualAction == permissionAction){
     console.log("Getting permission");
       return app.askForPermission("To locate you ", app.SupportedPermissions.DEVICE_PRECISE_LOCATION); 
+  }
+  if(actualAction === user_info_action){
+    const location = (app) =>{
+      if(app.isPermissionGranted()){
+        userInfo = app.getDeviceLocation().address;
+        if(userInfo){
+          app.tell(`You are at ${userInfo}`);
+        }else{
+          app.tell("Sorry there was an error locating you");
+        }
+      }
+    } 
   }
 }
