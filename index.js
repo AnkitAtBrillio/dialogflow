@@ -19,9 +19,6 @@ app.post('/getDealers', function(req,res){
   const locality = req.body.result.parameters['Locality'];
   const consent = req.body.result.parameters['Consent'];
   const actualAction = request.body.result.action;
-  console.log(req);
-  console.log("locality => " + locality);
-  console.log("city =>" + city);
 
   if(locality){
       getDealersOnBasisOfLocality(locality, function(error, finalResponse){
