@@ -153,9 +153,9 @@ function getPermissionFromUser(request,response) {
         userInfo = app.getDeviceLocation().address;
         if(userInfo){
           console.log(`Got the user address ${userInfo}`);
-          app.tell(`You are at ${userInfo}`);
+         return  app.tell(`You are at ${userInfo}`);
         }else{
-          app.tell("Sorry there was an error locating you");
+          return app.tell("Sorry there was an error locating you");
         }
       }
     } 
