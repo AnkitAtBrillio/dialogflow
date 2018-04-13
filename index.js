@@ -132,7 +132,7 @@ function getPromiseResponse(host, path) {
 function getPermissionFromUser(request,response,actualAction) {
 
   console.log("Inside getPermissionFromUser");
-  console.log("Request body " + request.body);
+  console.log("Request body " + JSON.stringify(request.body));
   const permissionAction = "request_permission";
   const user_info_action = "user_info";
   const DialogflowApp = require("actions-on-google").DialogflowApp;
