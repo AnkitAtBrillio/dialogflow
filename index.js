@@ -133,29 +133,12 @@ function getPromiseResponse(host, path) {
 
 function getPermissionFromUser(request,response) {
 
-  console.log('Get permission from user');
-  const actions = new Map();
-  const dialogFlowApp = new DialogFlowApp({request,response});
+  console.log("Inside getPermissionFromUser");
+  const permissionAction = "request_permission";
+  const actualAction = request.body.result.action;
+  console.log(`actualAction ${actualAction}`);
 
-  const askPermission = (dialogFlowApp) => {
-      console.log("Asking for permission");
-      dialogFlowApp.askForPermission("To locate you", dialogFlowApp.SupportedPermissions.DEVICE_PRECISE_LOCATION);
-  };
-
-  const userInfo = (dialogFlowApp) => {
-    if(dialogFlowApp.isPermissionGranted()) {
-       const address = dialogFlowApp.getDeviceLocation().address;
-            if (address) {            
-                dialogFlowApp.tell(`You are at ${address}`);
-            }else{
-              dialogFlowApp.tell("Sorry, could not figure out your location");
-            }
-    }
+  if(actualAction == permissionAction){
+    console.log("Permission is required");
   }
-
-    actions.set('request_permission', askPermission);
-    actions.set('user_info', userInfo);
-    dialogFlowApp.handleRequest(actions);
-
-
 }
