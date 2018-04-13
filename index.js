@@ -1,7 +1,6 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
-const DialogFlowApp = require('actions-on-google').DialogflowApp;
 const geoCodeAPIURL = "maps.googleapis.com";
 const geoCodeAPIKey = "AIzaSyC5VSrxufQfaSaM6J-mfFQJgGfXpiAP-7w";
 const dealersHost = "ankitsrivastava-test.apigee.net";
@@ -136,9 +135,13 @@ function getPermissionFromUser(request,response) {
   console.log("Inside getPermissionFromUser");
   const permissionAction = "request_permission";
   const actualAction = request.body.result.action;
+  const DialogflowApp = require("actions-on-google").DialogflowApp;
+  const app = new DialogflowApp({request,response});
+
   console.log(`actualAction ${actualAction}`);
 
   if(actualAction == permissionAction){
-    console.log("Permission is required");
+    console.log("Getting permission");
+      return app.askForPermission("To locate you ", app.SupportedPermissions.DEVICE_PRECISE_LOCATION); 
   }
 }
