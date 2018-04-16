@@ -146,8 +146,10 @@ function getPermissionFromUser(request,response,actualAction) {
   }
   if(actualAction == user_info_action){
       if(app.isPermissionGranted()){
-        console.log("Latitude of user locatio " + app.getDeviceLocation().latitude);
-        console.log("Longitude of user location " + app.getDeviceLocation().longitude);
+        let latitude = request.device.location.coordinates.latitude;
+        let longitude = request.device.location.coordinates.longitude;
+        console.log("Latitude " + latitude);
+        console.log("Longitude " + longitude);
       }
     } 
 }
