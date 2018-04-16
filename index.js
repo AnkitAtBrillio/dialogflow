@@ -153,7 +153,10 @@ function getPermissionFromUser(request,response,actualAction) {
         let longitude = request.body.originalRequest.data.device.location.coordinates.longitude;
         userStorage.userLatitude = latitude;
         userStorage.userLongitude = longitude;
-        return app.tell("We have located you woulongitude;ld you like to start navigation to nearest dealer?");
+        let finalResponse = "We have located you, would you like to start navigation to nearest dealer?";
+         response.setHeader("Content-type","application/json");
+          //res.send(JSON.stringify(a));
+          response.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
       }
     } 
 
