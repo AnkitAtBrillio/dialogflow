@@ -150,7 +150,7 @@ function getPermissionFromUser(request,response,actualAction) {
       console.log("Final step inside if condition");
       if(app.isPermissionGranted()){
         console.log("Permission is granted");
-        userInfo = app.getDeviceLocation().address;
+        userInfo = app.getDeviceLocation().toString();
         if(userInfo){
           console.log(`Got the user address ${userInfo}`);
          return  app.tell(`You are at ${userInfo}`);
