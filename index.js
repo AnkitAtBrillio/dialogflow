@@ -161,8 +161,8 @@ function getPermissionFromUser(request,response,actualAction) {
     } 
 
     if(actualAction == navigation_action){
-        let retainedLat = userStorage.latitude;
-        let retainedLong = userStorage.longitude;
+        let retainedLat = request.body.originalRequest.data..user.userStorage.data.userLatitude;
+        let retainedLong = request.body.originalRequest.data.user.userStorage.data.userLongitude;
         console.log("retainedLat " + retainedLat);
         console.log("retainedLong " + retainedLong);
     }
