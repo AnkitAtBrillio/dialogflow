@@ -135,8 +135,11 @@ function getPermissionFromUser(request,response,actualAction) {
   console.log("Request body " + JSON.stringify(request.body));
   const permissionAction = "request_permission";
   const user_info_action = "user_info";
+  const navigation_action = "start_navigation";
   const DialogflowApp = require("actions-on-google").DialogflowApp;
   const app = new DialogflowApp({request,response});
+  let  userStorage = app.userStorage;
+
 
   console.log(`actualAction ${actualAction}`);
 
@@ -148,7 +151,16 @@ function getPermissionFromUser(request,response,actualAction) {
       if(app.isPermissionGranted()){
         let latitude = request.body.originalRequest.data.device.location.coordinates.latitude;
         let longitude = request.body.originalRequest.data.device.location.coordinates.longitude;
-        return app.tell("We have located you would you like to start navigation to nearest dealer?");
+        userStorage.userLatitude = latitude;
+        userStorage.userLongitude = longitude;
+        return app.tell("We have located you woulongitude;ld you like to start navigation to nearest dealer?");
       }
     } 
+
+    if(actualAction == navigation_action){
+        let retainedLat = userStorage.latitude;
+        let retainedLong = userStorage.longitude;
+        console.log("retainedLat " + retainedLat);
+        console.log("retainedLong " + retainedLong);
+    }
 }
