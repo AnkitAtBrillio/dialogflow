@@ -145,18 +145,9 @@ function getPermissionFromUser(request,response,actualAction) {
       return app.askForPermission("To locate you ", app.SupportedPermissions.DEVICE_PRECISE_LOCATION); 
   }
   if(actualAction == user_info_action){
-    console.log("Got user info");
-    console.log("App permission status " + app.getDeviceLocation().address);
-      console.log("Final step inside if condition");
       if(app.isPermissionGranted()){
-        console.log("Permission is granted");
-        userInfo = app.getDeviceLocation().toString();
-        if(userInfo){
-          console.log(`Got the user address ${userInfo}`);
-         return  app.tell(`You are at ${userInfo}`);
-        }else{
-          return app.tell("Sorry there was an error locating you");
-        }
+        console.log("Latitude of user locatio " + app.getDeviceLocation().latitude);
+        console.log("Longitude of user location " + app.getDeviceLocation().longitude);
       }
     } 
 }
