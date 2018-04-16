@@ -148,8 +148,7 @@ function getPermissionFromUser(request,response,actualAction) {
       if(app.isPermissionGranted()){
         let latitude = request.body.originalRequest.data.device.location.coordinates.latitude;
         let longitude = request.body.originalRequest.data.device.location.coordinates.longitude;
-        console.log("Latitude " + latitude);
-        console.log("Longitude " + longitude);
+        return app.tell("We have located you would you like to start navigation to nearest dealer?");
       }
     } 
 }
