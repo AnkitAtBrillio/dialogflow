@@ -147,7 +147,6 @@ function getPermissionFromUser(request,response,actualAction) {
   if(actualAction == user_info_action){
     console.log("Got user info");
     console.log("App permission status " + app.getDeviceLocation().address);
-    const location = (appLocation) =>{
       console.log("Final step inside if condition");
       if(app.isPermissionGranted()){
         console.log("Permission is granted");
@@ -160,5 +159,4 @@ function getPermissionFromUser(request,response,actualAction) {
         }
       }
     } 
-  }
 }
