@@ -144,7 +144,7 @@ function getPermissionFromUser(request,response,actualAction) {
     console.log("Getting permission");
       return app.askForPermission("To locate you ", app.SupportedPermissions.DEVICE_PRECISE_LOCATION); 
   }
-  if(actualAction === user_info_action){
+  if(actualAction == user_info_action){
     console.log("Got user info");
     const location = (app) =>{
       if(app.isPermissionGranted()){
