@@ -146,8 +146,8 @@ function getPermissionFromUser(request,response,actualAction) {
   }
   if(actualAction == user_info_action){
       if(app.isPermissionGranted()){
-        let latitude = request.device.location.coordinates.latitude;
-        let longitude = request.device.location.coordinates.longitude;
+        let latitude = request.body.device.location.coordinates.latitude;
+        let longitude = request.body.device.location.coordinates.longitude;
         console.log("Latitude " + latitude);
         console.log("Longitude " + longitude);
       }
