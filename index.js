@@ -3,8 +3,8 @@ const https = require("https");
 const bodyParser = require("body-parser");
 const geoCodeAPIURL = "maps.googleapis.com";
 const geoCodeAPIKey = "AIzaSyC5VSrxufQfaSaM6J-mfFQJgGfXpiAP-7w";
-const dealersHost = "ankitsrivastava-test.apigee.net";
-const dealersPath = "/stubdealersapi?size=5";
+const dealersHost = "digitaslbi-nonprod-stream20-qa.apigee.net";
+const dealersPath = "/dialogflowdummy?size=5";
 const directionsApiURL = "https://www.google.com";
 const directionPath = "/maps/dir/?api=1";
 
