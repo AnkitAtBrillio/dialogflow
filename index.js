@@ -5,6 +5,8 @@ const geoCodeAPIURL = "maps.googleapis.com";
 const geoCodeAPIKey = "AIzaSyC5VSrxufQfaSaM6J-mfFQJgGfXpiAP-7w";
 const dealersHost = "ankitsrivastava-test.apigee.net";
 const dealersPath = "/stubdealersapi?size=5";
+const directionsApiURL = "https://www.google.com";
+const directionPath = "/maps/dir/?api=1";
 
 var app = express();
 
@@ -14,6 +16,7 @@ app.use(bodyParser.json());
 
 app.post('/getDealers', function(req,res){
   console.log("POST request accepted from dialogflow");
+  console.log("Request")
   const city = req.body.result.parameters['geo-city'];
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
@@ -87,6 +90,8 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
       let nearestDealer = output['dealers'][0];
       let dealerName = nearestDealer['name'];
       let distanceInKm = Math.round(nearestDealer['distance']['km']);
+      let dealerLatitude = nearestDealer.geolocation.latitude;
+      let dealerLongitude = nearestDealer.geolocation.longitude;
       let finalResponse = "The nearest dealer to you is " + dealerName + " which is at a distance of " + distanceInKm +  " km away";
       console.log("finalResponse => " + finalResponse);
       cb(null, finalResponse)
@@ -110,6 +115,23 @@ function getDealersOnCity(city, calback){
   });
 }
 
+function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
+
+    var requestURL = dealersPath + "&lat=" +  latiude + "&long=" + longitude;
+    var dealersPromiseReponse =  getPromiseResponse(dealersHost, requestURL);
+    dealersPromiseReponse.then((output) => {
+        console.log("dealersResponse => " + output);
+      output = JSON.parse(output);
+      let nearestDealer = output['dealers'][0];
+      let distanceInKm = Math.round(nearestDealer['distance']['km']);
+      let dealerLatitude = nearestDealer.geolocation.latitude;
+      let dealerLongitude = nearestDealer.geolocation.longitude;
+      let finalResponse = {"latitude" : dealerLatitude, "longitude" : dealerLongitude};
+      console.log("finalResponse => " + finalResponse);
+      cb(null, finalResponse)
+    });
+}
+
 
 //Generic function to handle http request and response
 function getPromiseResponse(host, path) {
@@ -129,6 +151,7 @@ function getPromiseResponse(host, path) {
 }
 
 
+//Generic method to handle operations to start navigation to nearest dealer
 function getPermissionFromUser(request,response,actualAction) {
 
   console.log("Inside getPermissionFromUser");
@@ -161,9 +184,38 @@ function getPermissionFromUser(request,response,actualAction) {
     } 
 
     if(actualAction == navigation_action){
-        let retainedLat = request.body.originalRequest.data.user.userStorage.data.userLatitude;
-        let retainedLong = request.body.originalRequest.data.user.userStorage.data.userLongitude;
-        console.log("retainedLat " + retainedLat);
-        console.log("retainedLong " + retainedLong);
+        let userStorageData = request.body.originalRequest.data.user.userStorage;
+        if(userStorageData){
+          userStorageData = JSON.parse(userStorageData);
+          let latitude = userStorageData.data.userLatitude;
+          let longitude = userStorageData.data.userLongitude
+          getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
+              let dealerLatitude = finalResponse.latitude;
+              let dealerLongitude = finalResponse.longitude;
+              callGoogleNavigationAPI(app, latitude, longitude, dealerLatitude, dealerLongitude);
+
+          });
+        }
+
     }
+}
+
+
+//Function to start navigation from google api call
+function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dealerLatitude, dealerLongitude) {
+
+  let path = directionPath + "&amp;origin=" + userLatitude + "," + userLongitude + "&amp;destination=" + dealerLatitude + "," + dealerLongitude + "&amp;key=" + geoCodeAPIKey;
+    console.log("Directions url " + path);
+    const finalDirectionsURL = directionsApiURL + path;
+    if(!dialogFlowApp.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
+      return dialogFlowApp.ask('Sorry this feature is available only for devices with screen');
+    }
+  return dialogFlowApp.ask(new BasicCard({
+    text : "Here is the directions to nearest dealer",
+    buttons : new Button({
+      title : "Start",
+      url : ${finalDirectionsURL},
+    }),
+  }));
+  
 }
