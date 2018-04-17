@@ -190,6 +190,11 @@ function getPermissionFromUser(request,response,actualAction) {
           let latitude = userStorageData.data.userLatitude;
           let longitude = userStorageData.data.userLongitude
           getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
+            if(error) {
+              let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
+              response.setHeader("Content-type","application/json");
+              response.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
+            }
               let dealerLatitude = finalResponse.latitude;
               let dealerLongitude = finalResponse.longitude;
               callGoogleNavigationAPI(app, latitude, longitude, dealerLatitude, dealerLongitude);
@@ -207,6 +212,7 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
   let path = directionPath + "&amp;origin=" + userLatitude + "," + userLongitude + "&amp;destination=" + dealerLatitude + "," + dealerLongitude + "&amp;key=" + geoCodeAPIKey;
     console.log("Directions url " + path);
     const finalDirectionsURL = directionsApiURL + path;
+    console.log("Available surfaces " + dialogFlowApp.surface);
     if(!dialogFlowApp.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')){
       return dialogFlowApp.ask('Sorry this feature is available only for devices with screen');
     }
