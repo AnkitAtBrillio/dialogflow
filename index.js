@@ -217,12 +217,8 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
     if(!dialogFlowApp.hasSurfaceCapability(screenCapibility)){
       return dialogFlowApp.ask('Sorry this feature is available only for devices with screen');
     }
-  return dialogFlowApp.ask(new BasicCard({
-    text : "Here is the directions to nearest dealer",
-    buttons : new Button({
-      title : "Start",
-      url : finalDirectionsURL,
-    })
-  }));
+
+
+  return dialogFlowApp.ask(new RichResponse().addSimpleResponse("Here are the directions").addBasicCard(new BasicCard().setImage(finalDirectionsURL, "Directions"));
   
 }
