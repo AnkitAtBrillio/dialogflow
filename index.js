@@ -214,8 +214,8 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
     text : "Here is the directions to nearest dealer",
     buttons : new Button({
       title : "Start",
-      url : ${finalDirectionsURL},
-    }),
+      url : finalDirectionsURL,
+    })
   }));
   
 }
