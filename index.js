@@ -212,11 +212,9 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
   let path = directionPath + "&amp;origin=" + userLatitude + "," + userLongitude + "&amp;destination=" + dealerLatitude + "," + dealerLongitude + "&amp;key=" + geoCodeAPIKey;
     console.log("Directions url " + path);
     const finalDirectionsURL = directionsApiURL + path;
-    console.log("Available surfaces " + dialogFlowApp.surface);
     let screenCapibility = dialogFlowApp.SurfaceCapabilities.SCREEN_OUTPUT;
-    console.log("Screeen capibility " + screenCapibility)
     console.log("Does device has screen capability " + dialogFlowApp.hasSurfaceCapability(screenCapibility));
-    if(dialogFlowApp.hasSurfaceCapability(screenCapibility)){
+    if(!dialogFlowApp.hasSurfaceCapability(screenCapibility)){
       return dialogFlowApp.ask('Sorry this feature is available only for devices with screen');
     }
   return dialogFlowApp.ask(new BasicCard({
