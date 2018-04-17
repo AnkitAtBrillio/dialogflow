@@ -219,6 +219,6 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
     }
 
 
-  return dialogFlowApp.ask(new RichResponse().addSimpleResponse("Here are the directions").addBasicCard(new BasicCard().setImage(finalDirectionsURL, "Directions")));
+  return dialogFlowApp.tell(dialogFlowApp.buildRichResponse().addSimpleResponse("Here are the directions").addBasicCard(dialogFlowApp.buildBasicCard().setImage(finalDirectionsURL, "Directions")));
   
 }
