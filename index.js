@@ -22,6 +22,7 @@ app.post('/getDealers', function(req,res){
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
   const consent = req.body.result.parameters['Consent'];
+  const services = req.body.result.parameters['Services'];
   const actualAction = req.body.result.action;
 
   if(locality){
@@ -40,6 +41,9 @@ app.post('/getDealers', function(req,res){
         res.setHeader("Content-type","application/json");
         res.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
     });
+  }
+  if(services){
+    getServicesForNearestDealer(req,res);
   }
   if(consent || actualAction){
   getPermissionFromUser(req,res,actualAction);
@@ -118,12 +122,15 @@ function getDealersOnCity(city, calback){
 
 function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
 
+    const app = new DialogflowApp({request,response});
+    let  userStorage = app.userStorage;
     var requestURL = dealersPath + "&lat=" +  latiude + "&long=" + longitude;
     var dealersPromiseReponse =  getPromiseResponse(dealersHost, requestURL);
     dealersPromiseReponse.then((output) => {
         console.log("dealersResponse => " + output);
       output = JSON.parse(output);
       let nearestDealer = output['dealers'][0];
+      userStorage.nearestDealer = JSON.stringify(nearestDealer);
       let distanceInKm = Math.round(nearestDealer['distance']['km']);
       let dealerLatitude = nearestDealer.geolocation.latitude;
       let dealerLongitude = nearestDealer.geolocation.longitude;
@@ -176,7 +183,7 @@ function getPermissionFromUser(request,response,actualAction) {
         let longitude = request.body.originalRequest.data.device.location.coordinates.longitude;
         userStorage.userLatitude = latitude;
         userStorage.userLongitude = longitude;
-        let finalResponse = "We have located you, would you like to start navigation to nearest dealer?";
+        let finalResponse = "We have located you, would you like to start navigation to nearest dealer or would you like to check for services?";
          response.setHeader("Content-type","application/json");
           //res.send(JSON.stringify(a));
           response.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
@@ -219,6 +226,18 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
     }
 
 
-  return dialogFlowApp.tell(dialogFlowApp.buildRichResponse().addSimpleResponse("Here are the directions").addBasicCard(dialogFlowApp.buildBasicCard().setImage("https://koenig-media.raywenderlich.com/uploads/2018/01/GoogleMaps-feature-2.png", "Directions").addButton("Start", finalDirectionsURL)));
+  return dialogFlowApp.tell(dialogFlowApp.buildRichResponse().addSimpleResponse("Here are the directions").addBasicCard(dialogFlowApp.buildBasicCard().setImage("https://koenig-media.raywenderlich.com/uploads/2018/01/GoogleMaps-feature-2.png", "Directions").addButton("Start", finalDi rectionsURL)));
   
+}
+
+
+//Function to get services provided by nearest dealers
+function getServicesForNearestDealer(req,res){
+
+console.log("Inside getServicesForNearestDealer");
+  let userStorageData = request.body.originalRequest.data.user.userStorage;
+  if(userStorageData){
+      userStorageData = JSON.parse(userStorageData);
+      nearestDealer = userStorageData.data.nearestDealer;
+      console.log("Nearest DEaler from userStorage " + JSON.stringify(nearestDealer));
 }
