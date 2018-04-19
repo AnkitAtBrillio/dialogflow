@@ -106,8 +106,6 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
 
 //Function to get dealers on basis of city
 function getDealersOnCity(city, calback){
-      const app = new DialogflowApp({request,response});
-    let  userStorage = app.userStorage;
   let dealersLocationPath = dealersPath + "&location=" + city;
   console.log("Dealres city search path " + dealersLocationPath);
   let locationPromiseResponse = getPromiseResponse(dealersHost, dealersLocationPath);
