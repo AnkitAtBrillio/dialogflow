@@ -120,7 +120,7 @@ function getDealersOnCity(city, calback){
   });
 }
 
-function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
+function getCorrdinatesOfNearestDealer(request,response,latiude,longitude,cb) {
 
     const app = new DialogflowApp({request,response});
     let  userStorage = app.userStorage;
@@ -196,7 +196,7 @@ function getPermissionFromUser(request,response,actualAction) {
           userStorageData = JSON.parse(userStorageData);
           let latitude = userStorageData.data.userLatitude;
           let longitude = userStorageData.data.userLongitude
-          getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
+          getCorrdinatesOfNearestDealer(request,response,latitude,longitude,function(error, finalResponse){
             if(error) {
               let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
               response.setHeader("Content-type","application/json");
@@ -239,7 +239,7 @@ function getServicesForNearestDealer(req,res){
           userStorageData = JSON.parse(userStorageData);
           let latitude = userStorageData.data.userLatitude;
           let longitude = userStorageData.data.userLongitude
-          getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
+          getCorrdinatesOfNearestDealer(req,res,latitude,longitude,function(error, finalResponse){
             if(error) {
               let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
               response.setHeader("Content-type","application/json");
