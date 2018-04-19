@@ -120,18 +120,14 @@ function getDealersOnCity(city, calback){
   });
 }
 
-function getCorrdinatesOfNearestDealer(request,response,latiude,longitude,cb) {
+function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
 
-    const app = new DialogflowApp({request,response});
-    let  userStorage = app.userStorage;
     var requestURL = dealersPath + "&lat=" +  latiude + "&long=" + longitude;
     var dealersPromiseReponse =  getPromiseResponse(dealersHost, requestURL);
     dealersPromiseReponse.then((output) => {
         console.log("dealersResponse => " + output);
       output = JSON.parse(output);
       let nearestDealer = output['dealers'][0];
-      console.log("Nearest Dealer " + JSON.stringify(nearestDealer));
-      userStorage.nearestDealer = JSON.stringify(nearestDealer);
       let distanceInKm = Math.round(nearestDealer['distance']['km']);
       let dealerLatitude = nearestDealer.geolocation.latitude;
       let dealerLongitude = nearestDealer.geolocation.longitude;
@@ -197,7 +193,7 @@ function getPermissionFromUser(request,response,actualAction) {
           userStorageData = JSON.parse(userStorageData);
           let latitude = userStorageData.data.userLatitude;
           let longitude = userStorageData.data.userLongitude
-          getCorrdinatesOfNearestDealer(request,response,latitude,longitude,function(error, finalResponse){
+          getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
             if(error) {
               let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
               response.setHeader("Content-type","application/json");
@@ -235,20 +231,23 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
 //Function to get services provided by nearest dealers
 function getServicesForNearestDealer(req,res){
 
-        let userStorageData = req.body.originalRequest.data.user.userStorage;
-        if(userStorageData){
-          userStorageData = JSON.parse(userStorageData);
-          let latitude = userStorageData.data.userLatitude;
-          let longitude = userStorageData.data.userLongitude
-          getCorrdinatesOfNearestDealer(req,res,latitude,longitude,function(error, finalResponse){
-            if(error) {
-              let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
-              response.setHeader("Content-type","application/json");
-              response.send(JSON.stringify({ 'speech': errorResponse, 'displayText': errorResponse }));
-            }
-            let latestUserStorage = req.body.originalRequest.data.user.userStorage;
-            console.log("latestUserStorage " + JSON.stringify(latestUserStorage));
 
-          });
+
+
 }
+
+
+
+
+function getServicesForDealer(dealerID){
+
+  let dealerIdPath = "/" + dealerID;
+  let indexOfQueryParam = dealersPath.indexOf("?");
+  let individualDealerPath = [dealersPath.slice(indexOfQueryParam),dealerIdPath,dealersPath.slice(indexOfQueryParam)].join('');
+  console.log("individualDealerPath " + individualDealerPath);
+  let individualDealerResponse = getPromiseResponse(dealersHost, individualDealerPath);
+  individualDealerResponse.then((output) => {
+      console.log("Individual Dealers "  + JSON.stringify(output));
+  });
+
 }
