@@ -243,11 +243,12 @@ function getServicesForDealer(dealerID){
 
   let dealerIdPath = "/" + dealerID;
   let indexOfQueryParam = dealersPath.indexOf("?");
-  let individualDealerPath = [dealersPath.slice(indexOfQueryParam),dealerIdPath,dealersPath.slice(indexOfQueryParam)].join('');
+  let individualDealerPath = [dealersPath.slice(0,indexOfQueryParam),dealerIdPath,dealersPath.slice(indexOfQueryParam)].join('');
   console.log("individualDealerPath " + individualDealerPath);
   let individualDealerResponse = getPromiseResponse(dealersHost, individualDealerPath);
   individualDealerResponse.then((output) => {
       console.log("Individual Dealers "  + JSON.stringify(output));
+
   });
 
 }
