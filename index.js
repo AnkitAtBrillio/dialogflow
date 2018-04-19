@@ -43,7 +43,7 @@ app.post('/getDealers', function(req,res){
     });
   }
   if(services){
-    getServicesForNearestDealer(req,res);
+    getServicesForDealer(req,res);
   }
   if(consent || actualAction){
   getPermissionFromUser(req,res,actualAction);
