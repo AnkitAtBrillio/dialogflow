@@ -122,6 +122,8 @@ function getDealersOnCity(city, calback){
 
 function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
 
+    const app = new DialogflowApp({request,response});
+    let  userStorage = app.userStorage;
     var requestURL = dealersPath + "&lat=" +  latiude + "&long=" + longitude;
     var dealersPromiseReponse =  getPromiseResponse(dealersHost, requestURL);
     dealersPromiseReponse.then((output) => {
