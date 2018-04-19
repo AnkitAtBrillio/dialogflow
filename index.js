@@ -235,7 +235,7 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
 function getServicesForNearestDealer(req,res){
 
 console.log("Inside getServicesForNearestDealer");
-  let userStorageData = request.body.originalRequest.data.user.userStorage;
+  let userStorageData = req.body.originalRequest.data.user.userStorage;
   if(userStorageData){
       userStorageData = JSON.parse(userStorageData);
       nearestDealer = userStorageData.data.nearestDealer;
