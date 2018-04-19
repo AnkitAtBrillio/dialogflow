@@ -1,6 +1,7 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
+const DialogflowApp = require("actions-on-google").DialogflowApp;
 const geoCodeAPIURL = "maps.googleapis.com";
 const geoCodeAPIKey = "AIzaSyC5VSrxufQfaSaM6J-mfFQJgGfXpiAP-7w";
 const dealersHost = "digitaslbi-nonprod-stream20-qa.apigee.net";
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 
 app.post('/getDealers', function(req,res){
   console.log("POST request accepted from dialogflow");
-  console.log("Request")
+  console.log("Request");
   const city = req.body.result.parameters['geo-city'];
   const location = req.body.result.parameters['Location'];
   const locality = req.body.result.parameters['Locality'];
@@ -159,7 +160,6 @@ function getPermissionFromUser(request,response,actualAction) {
   const permissionAction = "request_permission";
   const user_info_action = "user_info";
   const navigation_action = "start_navigation";
-  const DialogflowApp = require("actions-on-google").DialogflowApp;
   const app = new DialogflowApp({request,response});
   let  userStorage = app.userStorage;
 
@@ -219,6 +219,6 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
     }
 
 
-  return dialogFlowApp.tell(dialogFlowApp.buildRichResponse().addSimpleResponse("Here are the directions").addBasicCard(dialogFlowApp.buildBasicCard().setImage("https://koenig-media.raywenderlich.com/uploads/2018/01/GoogleMaps-feature-2.png", "Directions")));
+  return dialogFlowApp.tell(dialogFlowApp.buildRichResponse().addSimpleResponse("Here are the directions").addBasicCard(dialogFlowApp.buildBasicCard().setImage("https://koenig-media.raywenderlich.com/uploads/2018/01/GoogleMaps-feature-2.png", "Directions").addButton("Start", finalDirectionsURL)));
   
 }
