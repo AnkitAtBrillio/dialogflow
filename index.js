@@ -130,6 +130,7 @@ function getCorrdinatesOfNearestDealer(request,response,latiude,longitude,cb) {
         console.log("dealersResponse => " + output);
       output = JSON.parse(output);
       let nearestDealer = output['dealers'][0];
+      console.log("Nearest Dealer " + JSON.stringify(nearestDealer));
       userStorage.nearestDealer = JSON.stringify(nearestDealer);
       let distanceInKm = Math.round(nearestDealer['distance']['km']);
       let dealerLatitude = nearestDealer.geolocation.latitude;
