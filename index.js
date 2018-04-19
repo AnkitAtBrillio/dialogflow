@@ -198,7 +198,7 @@ function getPermissionFromUser(request,response,actualAction) {
             if(error) {
               let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
               response.setHeader("Content-type","application/json");
-              response.send(JSON.stringify({ 'speech': finalResponse, 'displayText': finalResponse }));
+              response.send(JSON.stringify({ 'speech': errorResponse, 'displayText': errorResponse }));
             }
               let dealerLatitude = finalResponse.latitude;
               let dealerLongitude = finalResponse.longitude;
@@ -232,12 +232,19 @@ function callGoogleNavigationAPI(dialogFlowApp, userLatitude, userLongitude, dea
 //Function to get services provided by nearest dealers
 function getServicesForNearestDealer(req,res){
 
-console.log("Inside getServicesForNearestDealer");
-  let userStorageData = req.body.originalRequest.data.user.userStorage;
-  console.log("userStorageData " + JSON.stringify(userStorageData));
-  if(userStorageData){
-      userStorageData = JSON.parse(userStorageData);
-      nearestDealer = userStorageData.data.nearestDealer;
-      console.log("Nearest DEaler from userStorage " + JSON.stringify(nearestDealer));
-}
+        let userStorageData = req.body.originalRequest.data.user.userStorage;
+        if(userStorageData){
+          userStorageData = JSON.parse(userStorageData);
+          let latitude = userStorageData.data.userLatitude;
+          let longitude = userStorageData.data.userLongitude
+          getCorrdinatesOfNearestDealer(latitude,longitude,function(error, finalResponse){
+            if(error) {
+              let errorResponse = "there seem to be some problem in starting the navigation. Try again later";
+              response.setHeader("Content-type","application/json");
+              response.send(JSON.stringify({ 'speech': errorResponse, 'displayText': errorResponse }));
+            }
+            let latestUserStorage = req.body.originalRequest.data.user.userStorage;
+            console.log("latestUserStorage " + JSON.stringify(latestUserStorage));
+
+          });
 }
