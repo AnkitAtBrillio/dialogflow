@@ -106,6 +106,8 @@ function getDealersNearCoordindates(latitude, longitude, cb) {
 
 //Function to get dealers on basis of city
 function getDealersOnCity(city, calback){
+      const app = new DialogflowApp({request,response});
+    let  userStorage = app.userStorage;
   let dealersLocationPath = dealersPath + "&location=" + city;
   console.log("Dealres city search path " + dealersLocationPath);
   let locationPromiseResponse = getPromiseResponse(dealersHost, dealersLocationPath);
@@ -122,8 +124,6 @@ function getDealersOnCity(city, calback){
 
 function getCorrdinatesOfNearestDealer(latiude,longitude,cb) {
 
-    const app = new DialogflowApp({request,response});
-    let  userStorage = app.userStorage;
     var requestURL = dealersPath + "&lat=" +  latiude + "&long=" + longitude;
     var dealersPromiseReponse =  getPromiseResponse(dealersHost, requestURL);
     dealersPromiseReponse.then((output) => {
@@ -236,6 +236,7 @@ function getServicesForNearestDealer(req,res){
 
 console.log("Inside getServicesForNearestDealer");
   let userStorageData = req.body.originalRequest.data.user.userStorage;
+  console.log("userStorageData " + JSON.stringify(userStorageData));
   if(userStorageData){
       userStorageData = JSON.parse(userStorageData);
       nearestDealer = userStorageData.data.nearestDealer;
